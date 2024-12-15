@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Product {
+protected:
+    string name;
+    double price;
+public:
+    Product(const string& productName, double productPrice) 
+        : name(productName), price(productPrice) {}
+    string getName() const { return name; }
+    void setName(const string& productName) { name= productName; }
+    double getPrice() const { return price; }
+    void setPrice(double productPrice) { price = productPrice; }
+    virtual double getFinalPrice() const = 0;
+    virtual ~Product() {}
+};
+class Discountable {
+public:
+    virtual double applyDiscount(double price) const=0;
+    virtual ~Discountable() {}
+};
+class Book : public Product, public Discountable {
+public:
+    Book(const string& bookName, double bookPrice) 
+        : Product(bookName, bookPrice) {}
+    double applyDiscount(double price) const override {
+        return price* 0.9;
+    }
+    double getFinalPrice() const override {
+        return applyDiscount(price);
+    }
+};
+class Pen : public Product, public Discountable {
+public:
+    Pen(const string& penName, double penPrice) 
+        : Product(penName, penPrice) {}
+    double applyDiscount(double price) const override {
+        return (price >5) ? price - 5 : price;
+    }
+    double getFinalPrice() const override {
+        return applyDiscount(price);
+    }
+};
+int main() {
+    Book book1("C++ Programme", 300 );
+    Book book2("Data Base",150);
+    Pen pen1("Ball Pen", 20 );
+    Pen pen2("Gel Pen", 3 );
+    cout << "Product: " << book1.getName() 
+         << ", Base Price: " << book1.getPrice() << " bucks"
+         << ", Final Price: " << book1.getFinalPrice() <<  " bucks"<<endl;
+    cout << "Product: " << book2.getName() 
+         << ", Base Price: " << book2.getPrice() << " bucks"
+         << ", Final Price: " << book2.getFinalPrice() << " bucks"<< endl;
+    cout << "Product: " << pen1.getName() 
+         << ", Base Price: " << pen1.getPrice() << " bucks"
+         << ", Final Price: " << pen1.getFinalPrice() <<  " bucks"<< endl;
+    cout << "Product: " << pen2.getName() 
+         << ", Base Price: " << pen2.getPrice() << " bucks"
+         << ", Final Price: " << pen2.getFinalPrice() <<  " bucks"<<endl;
+    return 0;
+}
